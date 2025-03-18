@@ -32,6 +32,7 @@ namespace MVCEcommerce.Controllers
             {
                 _context.Categories.Add(obj);
                 _context.SaveChanges();
+                TempData["success"] = "Category Created Successfully";
                 return RedirectToAction("Index");
             }
             return View();
@@ -57,6 +58,7 @@ namespace MVCEcommerce.Controllers
             {
                 _context.Categories.Update(obj);
                 _context.SaveChanges();
+                TempData["success"] = "Category Updated Successfully";
                 return RedirectToAction("Index");
             }
             return View();
@@ -84,6 +86,7 @@ namespace MVCEcommerce.Controllers
             }
             _context.Categories.Remove(obj);
             _context.SaveChanges();
+            TempData["success"] = "Category Deleted Successfully";
 
             return RedirectToAction("Index");
         }
