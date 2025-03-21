@@ -2,13 +2,11 @@
 
 namespace MVCEcommerce.Repository.IRepository
 {
-    internal interface IRepository<T> where T : class
+    public interface IRepository<T> where T : class
     {
-        T Get(int id);
-        IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null);
-        T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null);
+        IEnumerable<T> GetAll();
+        T Get(Expression<Func<T, bool>> filter);
         void Add(T entity);
-        void Remove(int id);
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entity);
     }
