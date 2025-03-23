@@ -3,6 +3,7 @@ using MVCEcommerce.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCEcommerce.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250323122908_AddProductToDb1")]
+    partial class AddProductToDb1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,14 +73,7 @@ namespace MVCEcommerce.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -90,49 +86,30 @@ namespace MVCEcommerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.ToTable("Products");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CategoryId = 2,
                             Description = "Description 1",
-                            ImageUrl = "",
                             Name = "Product 1",
                             Price = 100.0
                         },
                         new
                         {
                             Id = 2,
-                            CategoryId = 3,
                             Description = "Description 2",
-                            ImageUrl = "",
                             Name = "Product 2",
                             Price = 200.0
                         },
                         new
                         {
                             Id = 3,
-                            CategoryId = 4,
                             Description = "Description 3",
-                            ImageUrl = "",
                             Name = "Product 3",
                             Price = 300.0
                         });
-                });
-
-            modelBuilder.Entity("MVCEcommerce.Models.Product", b =>
-                {
-                    b.HasOne("MVCEcommerce.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }

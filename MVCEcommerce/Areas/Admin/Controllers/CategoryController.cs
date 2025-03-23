@@ -4,8 +4,9 @@ using MVCEcommerce.Models;
 using MVCEcommerce.Repository.IRepository;
 
 
-namespace MVCEcommerce.Controllers
+namespace MVCEcommerce.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
