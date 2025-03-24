@@ -14,6 +14,7 @@ namespace MVCEcommerce.Repository
         {
             _context = context;
             this.contextSet = _context.Set<T>();
+            _context.Products.Include(u => u.Category).Include(u => u.CategoryId);
         }
 
         public void Add(T entity)
@@ -21,43 +22,42 @@ namespace MVCEcommerce.Repository
             contextSet.Add(entity);
         }
 
-        public T Get(Expression<Func<T, bool>> filter)
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query = contextSet;
             query = query.Where(filter);
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
             return query.FirstOrDefault();
         }
 
-        //public T Get(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public IEnumerable<T> GetAll()
+        //Categoru, CoverType
+        public IEnumerable<T> GetAll(string? includeProperties = null)
         {
             IQueryable<T> query = contextSet;
+            if(!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
             return query.ToList();
         }
 
-        //public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         public void Remove(T entity)
         {
             contextSet.Remove(entity);
         }
 
-        //public void Remove(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         public void RemoveRange(IEnumerable<T> entity)
         {

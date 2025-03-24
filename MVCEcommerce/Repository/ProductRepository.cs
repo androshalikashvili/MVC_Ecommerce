@@ -19,7 +19,18 @@ namespace MVCEcommerce.Repository
 
         public void Update(Product obj)
         {
-            _context.Products.Update(obj);
+            var objFromDb = _context.Products.FirstOrDefault(u => u.Id == obj.Id);
+            if(objFromDb != null)
+            {
+                objFromDb.Name = obj.Name;
+                objFromDb.Price = obj.Price;
+                objFromDb.Description = obj.Description;
+                objFromDb.CategoryId = obj.CategoryId;
+                if(obj.ImageUrl != null)
+                {
+                    objFromDb.ImageUrl = obj.ImageUrl;
+                }
+            }
         }
     }
 }
