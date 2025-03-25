@@ -29,7 +29,8 @@ namespace MVCEcommerce.Repository
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includeProperty in includeProperties
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    .Split(new char[] { ',' }, StringSplitOptions.
+                    RemoveEmptyEntries))
                 {
                     query = query.Include(includeProperty);
                 }
