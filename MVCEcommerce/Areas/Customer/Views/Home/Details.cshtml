@@ -1,0 +1,138 @@
+﻿@model ProductViewModel
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Product Image -->
+        <div class="col-md-5">
+            <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" class="img-fluid rounded shadow" />
+        </div>
+
+        <!-- Product Information -->
+        <div class="col-md-7">
+            <h1 class="text-uppercase">@Model.Product.Name</h1>
+            <h3 class="text-success">@Model.Product.Price.ToString("c")</h3>
+            <p class="text-muted">@Model.Product.ShortDescription</p>
+
+            <!-- Rating -->
+            <div class="mb-3">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    <i class="bi @(i <= Model.Product.AverageRating ? "bi-star-fill text-warning" : "bi-star text-secondary")"></i>
+                }
+                <span class="ms-2">(@Model.Product.Reviews.Count reviews)</span>
+            </div>
+
+            <!-- Buttons -->
+            <div>
+                <button class="btn btn-success me-2" onclick="addToCart(@Model.Product.Id)">Add to Cart</button>
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">Rate this product</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mt-4" id="productTabs">
+        <li class="nav-item">
+            <a class="nav-link active" id="details-tab" data-bs-toggle="tab" href="#details">Details</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="reviews-tab" data-bs-toggle="tab" href="#reviews">Rewievs</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3">
+        <!-- Details -->
+        <div class="tab-pane fade show active" id="details">
+            <p>@Model.Product.Description</p>
+        </div>
+
+        <!-- Review -->
+        <div class="tab-pane fade" id="reviews">
+            @if (Model.Product.Reviews.Any())
+            {
+                @foreach (var review in Model.Product.Reviews)
+                {
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">@review.Name</h5>
+                            <p class="card-text">@review.Comment</p>
+                            <div>
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="bi @(i <= review.Rating ? "bi-star-fill text-warning" : "bi-star text-secondary")"></i>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No reviews yet. Be the first to write a review!</p>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal window for evaluation -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Leave a review about @Model.Product.Name</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" asp-action="AddReview">
+                <div class="modal-body">
+                    <input type="hidden" name="ProductId" value="@Model.Product.Id" />
+
+                    <!-- Rating -->
+                    <div class="mb-3">
+                        <label class="form-label">Rating:</label>
+                        <select class="form-select" name="Rating">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <option value="@i">@i Stars</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="mb-3">
+                        <label class="form-label">Your Name: </label>
+                        <input type="text" name="Name" class="form-control" required />
+                    </div>
+
+                    <!-- Comment -->
+                    <div class="mb-3">
+                        <label class="form-label">Review:</label>
+                        <textarea name="Comment" class="form-control" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Send</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addToCart(productId) {
+        fetch(`/cart/add/${productId}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    toastr.success('The product has been added to the cart!');
+                } else {
+                    toastr.error('Error adding product to Cart');
+                }
+            })
+            .catch(() => toastr.error('Network error'));
+    }
+</script>

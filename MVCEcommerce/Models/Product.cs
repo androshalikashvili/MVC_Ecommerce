@@ -10,17 +10,22 @@ namespace MVCEcommerce.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+        public string ShortDescription { get; set; }
         public string Description { get; set; }
         [Required]
-        [Range(1, 10000)]
-        public double Price { get; set; }
+        [Range(0.01, 10000)]
+        [Column(TypeName = "decimal(18, 2)")]
 
+        public decimal Price { get; set; }
+        [ValidateNever]
+        public string ImageUrl { get; set; }
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         [ValidateNever]
         public Category Category { get; set; }
-        [ValidateNever]
-        public string ImageUrl { get; set; }
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
 
+        public double AverageRating => Reviews.Any() ? Reviews.Average(r => r.Rating) : 0;
     }
+
 }

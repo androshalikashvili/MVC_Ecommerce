@@ -24,6 +24,7 @@ namespace MVCEcommerce.Repository
             {
                 objFromDb.Name = obj.Name;
                 objFromDb.Price = obj.Price;
+                objFromDb.ShortDescription = obj.ShortDescription;
                 objFromDb.Description = obj.Description;
                 objFromDb.CategoryId = obj.CategoryId;
                 if(obj.ImageUrl != null)

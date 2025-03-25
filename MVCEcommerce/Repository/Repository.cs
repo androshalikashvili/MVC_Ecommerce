@@ -2,6 +2,7 @@
 using MVCEcommerce.Data;
 using MVCEcommerce.Repository.IRepository;
 using System.Linq.Expressions;
+using MVCEcommerce.Extensions;
 
 
 namespace MVCEcommerce.Repository
@@ -24,34 +25,71 @@ namespace MVCEcommerce.Repository
 
         public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
-            IQueryable<T> query = contextSet;
-            query = query.Where(filter);
+            IQueryable<T> query = contextSet.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {
-                foreach (var includeProperty in includeProperties
-                    .Split(new char[] { ',' }, StringSplitOptions.
-                    RemoveEmptyEntries))
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query = query.Include(includeProperty);
+                    query = query.Include(includeProperty.Trim());
                 }
             }
             return query.FirstOrDefault();
         }
 
-        //Categoru, CoverType
         public IEnumerable<T> GetAll(string? includeProperties = null)
         {
             IQueryable<T> query = contextSet;
-            if(!string.IsNullOrEmpty(includeProperties))
+            if (!string.IsNullOrEmpty(includeProperties))
             {
-                foreach (var includeProperty in includeProperties
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query = query.Include(includeProperty);
+                    query = query.Include(includeProperty.Trim());
                 }
             }
             return query.ToList();
         }
+
+
+        //public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        //{
+        //    return contextSet.Where(filter).IncludeProperties(includeProperties).FirstOrDefault();
+        //}
+
+        //public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        //{
+        //    IQueryable<T> query = contextSet;
+        //    query = query.Where(filter);
+        //    if (!string.IsNullOrEmpty(includeProperties))
+        //    {
+        //        foreach (var includeProperty in includeProperties
+        //            .Split(new char[] { ',' }, StringSplitOptions.
+        //            RemoveEmptyEntries))
+        //        {
+        //            query = query.Include(includeProperty);
+        //        }
+        //    }
+        //    return query.FirstOrDefault();
+        //}
+
+        //Categori, CoverType
+        //public IEnumerable<T> GetAll(string? includeProperties = null)
+        //{
+        //    return contextSet.IncludeProperties(includeProperties).ToList();
+        //}
+
+        //public IEnumerable<T> GetAll(string? includeProperties = null)
+        //{
+        //    IQueryable<T> query = contextSet;
+        //    if (!string.IsNullOrEmpty(includeProperties))
+        //    {
+        //        foreach (var includeProperty in includeProperties
+        //            .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        //        {
+        //            query = query.Include(includeProperty);
+        //        }
+        //    }
+        //    return query.ToList();
+        //}
 
 
         public void Remove(T entity)

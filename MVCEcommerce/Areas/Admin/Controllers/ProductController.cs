@@ -98,6 +98,11 @@ namespace MVCEcommerce.Areas.Admin.Controllers
             }
             else
             {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                foreach (var error in errors)
+                {
+                    Console.WriteLine(error);
+                }
                 productVM.CategoryList = _unitOfWork.Category
                 .GetAll().Select(i => new SelectListItem
                 {
