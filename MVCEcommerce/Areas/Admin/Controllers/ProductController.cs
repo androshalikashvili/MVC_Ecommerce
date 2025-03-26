@@ -20,7 +20,7 @@ namespace MVCEcommerce.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties:"Category").ToList();
+            List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
             IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category
                 .GetAll().Select(i => new SelectListItem
                 {
@@ -34,14 +34,14 @@ namespace MVCEcommerce.Areas.Admin.Controllers
         public IActionResult Upsert(int? id) //Update- Insert == Upsert
         {
 
-            ProductViewModel productVM = new ()
+            ProductViewModel productVM = new()
             {
-                 CategoryList = _unitOfWork.Category
+                CategoryList = _unitOfWork.Category
                  .GetAll().Select(i => new SelectListItem
-                {
-                    Text = i.Name,
-                    Value = i.Id.ToString()
-                }),
+                 {
+                     Text = i.Name,
+                     Value = i.Id.ToString()
+                 }),
                 Product = new Product()
             };
             if (id == null || id == 0)
@@ -54,7 +54,7 @@ namespace MVCEcommerce.Areas.Admin.Controllers
                 //update
                 productVM.Product = _unitOfWork.Product.Get(u => u.Id == id);
                 return View(productVM);
-            }           
+            }
         }
 
         [HttpPost]
@@ -169,6 +169,5 @@ namespace MVCEcommerce.Areas.Admin.Controllers
         }
 
         #endregion
-
-    }
+    }    
 }
