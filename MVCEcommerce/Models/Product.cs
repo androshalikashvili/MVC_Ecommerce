@@ -8,10 +8,9 @@ namespace MVCEcommerce.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
         public string Name { get; set; }
-        public string Description { get; set; }
-        [Required]
+        public string? Description { get; set; }
+        
         [Range(1, 10000)]
         public double Price { get; set; }
 
@@ -20,7 +19,7 @@ namespace MVCEcommerce.Models
         [ValidateNever]
         public Category Category { get; set; }
         [ValidateNever]
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
 
     }
 }
