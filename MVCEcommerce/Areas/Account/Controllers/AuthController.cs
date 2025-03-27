@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using MVCEcommerce.Models;
 using MVCEcommerce.Models.ViewModels;
 
+
 namespace MVCEcommerce.Areas.Account.Controllers
 {
+    [Area("Account")]
     public class AuthController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -47,5 +49,14 @@ namespace MVCEcommerce.Areas.Account.Controllers
             }
             return View(model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home", new { area = "Customer" });
+        }
+
     }
 }

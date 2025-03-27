@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribute;
-using Microsoft.Build.Framework;
+
 
 namespace MVCEcommerce.Models.ViewModels
 {
