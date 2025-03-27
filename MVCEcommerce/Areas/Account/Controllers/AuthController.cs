@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MVCEcommerce.Models;
 using MVCEcommerce.Models.ViewModels;
 
-namespace MVCEcommerce.Areas.Auth
+namespace MVCEcommerce.Areas.Account.Controllers
 {
     public class AuthController : Controller
     {
@@ -22,9 +22,9 @@ namespace MVCEcommerce.Areas.Auth
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterVM model)
+        public async Task<IActionResult>Register(RegisterVM model)
         {
-            if (!ModelState.IsValid) {
+            if (ModelState.IsValid) {
 
                 var user = new ApplicationUser
                 {
@@ -45,7 +45,7 @@ namespace MVCEcommerce.Areas.Auth
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            return View();
+            return View(model);
         }
     }
 }

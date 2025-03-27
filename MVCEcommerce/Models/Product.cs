@@ -12,7 +12,7 @@ namespace MVCEcommerce.Models
         public string? Description { get; set; }
         
         [Range(1, 10000)]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
