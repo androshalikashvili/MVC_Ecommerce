@@ -4,38 +4,48 @@
     ViewBag.Title = "Login";
 }
 
-<h2>Login</h2>
-
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Login" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py4">
+        <div class="row">
+            <div class=" col-12 text-center">
+                <h2 class="py-2 text-white">Login</h2>
             </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="row">
+            <div class="col-md-12">
+                <form asp-action="Login" method="post">
+                    <h3 class="border-bottom pb-3 mb-4 text-secondary text-center">
+                        Use a local account to log in.</h3>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Email" class="form-control" placeholder="your@mail.com" />
+                        <label asp-for="Email" class="control-label" ></label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
 
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Password" type="password" class="form-control" placeholder="yourpassword" />
+                        <label asp-for="Password" class="control-label"></label>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
 
-            <div class="form-group">
-                <input asp-for="RememberMe" class="form-check-input" />
-                <label asp-for="RememberMe" class="form-check-label"></label>
-            </div>
+                    <div class="form-group">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label"></label>
+                    </div>
 
-            <div class="form-group mt-3">
-                <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                    <div class="form-group mt-3">
+                        @* <span asp-area="Customer" asp-controll="Index" class="btn btn-primary">Cancel</span> *@
+                        <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Cancel</a>
+                    </div>
+                </form>
             </div>
-            <div class="form-group mt-3">
-                @* <span asp-area="Customer" asp-controll="Index" class="btn btn-primary">Cancel</span> *@
-                <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Cancel</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
