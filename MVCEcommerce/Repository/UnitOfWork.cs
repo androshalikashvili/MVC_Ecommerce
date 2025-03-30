@@ -11,6 +11,7 @@ namespace MVCEcommerce.Repository
         public ICategoryRepository Category {  get; private set; }
         public IProductRepository Product {  get; private set; }
         public ICartRepository CartItem { get; private set; }
+        public IReviewRepository Review { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -18,10 +19,16 @@ namespace MVCEcommerce.Repository
             Category = new CategoryRepository(_context);
             Product = new ProductRepository(_context);
             CartItem = new CartRepository(_context);
+            Review = new ReviewRepository(_context);
         }
         public void Save()
         {
             _context.SaveChanges();
+        }
+
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

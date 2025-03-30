@@ -22,6 +22,7 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category");
+
         return View(productList);
     }
     public IActionResult Details(int productId)
@@ -29,9 +30,11 @@ public class HomeController : Controller
         var product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "Category");
         if (product == null) return NotFound();
 
+        var reviews = _unitOfWork.Review.GetReviewsByProductId(productId);
         var productViewModel = new ProductViewModel
         {
             Product = product,
+            Reviews = reviews,
             CategoryList = _unitOfWork.Category
                 .GetAll()
                 .Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })

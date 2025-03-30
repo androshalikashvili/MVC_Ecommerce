@@ -1,0 +1,16 @@
+﻿@model IEnumerable<MVCEcommerce.Models.Review>
+
+@if (Model.Any())
+{
+    foreach (var review in Model)
+    {
+        <div class="review mb-3 p-3 border rounded">
+            <strong>@review.Author</strong> - @review.Rating ⭐
+            <p>@review.Content</p>
+        </div>
+    }
+}
+else
+{
+    <p>No reviews yet. Be the first!</p>
+}
