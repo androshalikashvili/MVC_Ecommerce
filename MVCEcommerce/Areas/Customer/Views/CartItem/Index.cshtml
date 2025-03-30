@@ -1,0 +1,91 @@
+﻿@model IEnumerable<MVCEcommerce.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<h2 class="text-center my-4">Cart</h2>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Product.Price.ToString("C")</td>
+                    <td>
+                        <form asp-controller="CartItem" asp-action="UpdateQuantity" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control d-inline w-25" />
+                            <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                        </form>
+                    </td>
+                    <td>@((item.Product.Price * item.Quantity).ToString("C"))</td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(@item.Id)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Total Sum: @Model.Sum(item => item.Product.Price * item.Quantity).ToString("C")</h3>
+
+    <form asp-controller="CartItem" asp-action="ClearCart" method="post">
+        <button type="submit" class="btn btn-warning">Clear entire cart</button>
+    </form>
+
+    <!-- needs some improvement -->
+    <a asp-controller="Checkout" asp-action="Index" class="btn btn-success">Place an order</a>
+}
+else
+{
+    <div class="text-center">
+        <h4>Your Cart is empty</h4>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">Go Shopping</a>
+    </div>
+}
+
+
+<!-- Modal window -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="confirmDeleteLabel">Confirm deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to remove this item from your cart?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete(itemId) {
+        var form = document.getElementById('deleteForm');
+        form.action = '/Customer/CartItem/Remove/' + itemId;
+        var modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        modal.show();
+    }
+</script>

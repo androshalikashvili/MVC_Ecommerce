@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MVCEcommerce.Models;
+using MVCEcommerce.Models.ViewModels;
 using MVCEcommerce.Repository.IRepository;
 
 namespace MVCEcommerce.Areas.Customer.Controllers;
@@ -24,9 +26,20 @@ public class HomeController : Controller
     }
     public IActionResult Details(int productId)
     {
-        Product product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "Category");
-        return View(product);
+        var product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "Category");
+        if (product == null) return NotFound();
+
+        var productViewModel = new ProductViewModel
+        {
+            Product = product,
+            CategoryList = _unitOfWork.Category
+                .GetAll()
+                .Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })
+        };
+
+        return View(productViewModel);
     }
+
 
     public IActionResult Privacy()
     {

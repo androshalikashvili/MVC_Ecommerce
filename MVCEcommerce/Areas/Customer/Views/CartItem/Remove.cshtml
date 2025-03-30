@@ -1,0 +1,29 @@
+﻿@model MVCEcommerce.Models.CartItem
+
+@{
+    ViewData["Title"] = "Removing an item from the cart";
+}
+
+<div class="container mt-5">
+    <h2 class="text-danger">Delete Product</h2>
+    <p>Are you sure you want to delete the item? <strong>@Model.Product.Name</strong> from cart?</p>
+
+    <div class="card shadow p-3">
+        <div class="row">
+            <div class="col-md-3">
+                <img src="@Model.Product.ImageUrl" class="img-fluid rounded" alt="@Model.Product.Name">
+            </div>
+            <div class="col-md-9">
+                <h4>@Model.Product.Name</h4>
+                <p><strong>Цена:</strong> @Model.Product.Price.ToString("c")</p>
+                <p><strong>Количество:</strong> @Model.Quantity</p>
+
+                <form asp-area="Customer" asp-controller="CartItem" asp-action="Remove" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using MVCEcommerce.Data;
 using MVCEcommerce.Models;
 using MVCEcommerce.Models.ViewModels;
 using MVCEcommerce.Repository.IRepository;
+using System.Text.Json;
 
 
 namespace MVCEcommerce.Areas.Admin.Controllers
@@ -18,17 +20,26 @@ namespace MVCEcommerce.Areas.Admin.Controllers
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
         }
-        public IActionResult Index()
+        public IActionResult Index(string? search, int? categoryId, int? minPrice, int? maxPrice, int? rating)
         {
-            List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
-            IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category
-                .GetAll().Select(i => new SelectListItem
-                {
-                    Text = i.Name,
-                    Value = i.Id.ToString()
-                });
+            var products = _unitOfWork.Product.GetAll(includeProperties: "Category").AsQueryable();
 
-            return View(objProductList);
+            if (!string.IsNullOrEmpty(search))
+                products = products.Where(p => p.Name.Contains(search));
+
+            if (categoryId.HasValue)
+                products = products.Where(p => p.CategoryId == categoryId);
+
+            if (minPrice.HasValue)
+                products = products.Where(p => p.Price >= minPrice.Value);
+
+            if (maxPrice.HasValue)
+                products = products.Where(p => p.Price <= maxPrice.Value);
+
+            if (rating.HasValue)
+                products = products.Where(p => p.Rating >= rating.Value);
+
+            return View(products.ToList());
         }
 
         public IActionResult Upsert(int? id) //Update- Insert == Upsert
@@ -92,6 +103,7 @@ namespace MVCEcommerce.Areas.Admin.Controllers
                     _unitOfWork.Product.Update(productVM.Product);
                 }
 
+
                 _unitOfWork.Save();
                 TempData["success"] = "Product Created Successfully";
                 return RedirectToAction("Index");
@@ -107,34 +119,36 @@ namespace MVCEcommerce.Areas.Admin.Controllers
                 return View(productVM);
             }
         }
-      
-        //public IActionResult Delete(int? id)
-        //{
-        //    if (id == null || id == 0)
-        //    {
-        //        return NotFound();
-        //    }
-        //    Product? productFromDb = _unitOfWork.Product.Get(u => u.Id == id);
-        //    if (productFromDb == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(productFromDb);
-        //}
-        //[HttpPost, ActionName("Delete")]
-        //public IActionResult DeletePost(int? id)
-        //{
-        //    Product? obj = _unitOfWork.Product.Get(u => u.Id == id);
-        //    if (obj == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    _unitOfWork.Product.Remove(obj);
-        //    _unitOfWork.Save();
-        //    TempData["success"] = "Product Deleted Successfully";
 
-        //    return RedirectToAction("Index");
-        //}
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            Product? productFromDb = _unitOfWork.Product.Get(u => u.Id == id);
+            if (productFromDb == null)
+            {
+                return NotFound();
+            }
+            return View(productFromDb);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeletePost(int? id)
+        {
+            Product? obj = _unitOfWork.Product.Get(u => u.Id == id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            _unitOfWork.Product.Remove(obj);
+            _unitOfWork.Save();
+            TempData["success"] = "Product Deleted Successfully";
+
+            return RedirectToAction("Index");
+        }
+
 
         #region API CALLS
 
@@ -142,30 +156,11 @@ namespace MVCEcommerce.Areas.Admin.Controllers
         public IActionResult GetAll()
         {
             List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
-            return Json(new { data = objProductList });
-        }
-
-
-        [HttpDelete]
-        public IActionResult Delete(int? id)
-        {
-            var productToBeDeleted = _unitOfWork.Product.Get(u => u.Id == id);
-            if(productToBeDeleted == null)
+            return Json(new { data = objProductList }, new JsonSerializerOptions
             {
-                return Json(new { success = false, message = "Error while deleting" });
-            }
-            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath,
-                productToBeDeleted.ImageUrl.TrimStart('\\'));
-
-            if (System.IO.File.Exists(oldImagePath))
-            {
-                System.IO.File.Delete(oldImagePath);
-            }
-
-            _unitOfWork.Product.Remove(productToBeDeleted);
-            _unitOfWork.Save();
-
-            return Json(new { success = true, message = "Delete Successful" });
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+                WriteIndented = true
+            });
         }
 
         #endregion

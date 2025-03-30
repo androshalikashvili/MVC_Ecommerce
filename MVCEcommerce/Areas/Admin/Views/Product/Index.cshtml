@@ -22,16 +22,33 @@
             <thead>
                 <tr>
                     <th>Product Name</th>
-                    <th>Description</th>
                     <th>Price</th>
                     <th>Category</th>
                     <th></th>
                 </tr>
-            </thead>  
+            </thead> 
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.Price</td>
+                        <td>@product.Category.Name</td>
+                        <td>
+                            <a asp-controller="Product" asp-action="Upsert" asp-route-id="@product.Id" class="btn btn-primary text-white">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger text-white">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
 </div>
 
-@section Scripts {
-    <script src="~/js/product.js"></script>
-}
+@* @section Scripts { *@
+@*     <script src="~/js/product.js"></script> *@
+@* } *@

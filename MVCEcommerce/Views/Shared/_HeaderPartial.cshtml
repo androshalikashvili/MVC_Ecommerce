@@ -40,6 +40,14 @@
                             <span class="navbar-text text-white text-uppercase">Wellcome, @User.Identity.Name!</span>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link position-relative"asp-area="Customer" asp-controller="CartItem" asp-action="Index">
+                                <i class="bi bi-cart3" style="font-size: 1.5rem;"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">
+                                    0
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <form asp-area="Account" asp-controller="Auth" asp-action="Logout" method="post">
                                 <button type="submit" class="nav-link btn btn-link text-white">Logout</button>
                             </form>
