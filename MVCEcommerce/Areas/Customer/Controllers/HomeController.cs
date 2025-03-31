@@ -68,28 +68,6 @@ public class HomeController : Controller
         return View(model);
     }
 
-
-
-    //public IActionResult Index()
-    //{
-    //    var products = _unitOfWork.Product.GetAll(includeProperties: "Category")
-    //        .Select(p => new ProductViewModel
-    //        {
-    //            Product = p,
-    //            AverageRating = _unitOfWork.Review.GetReviewsByProductId(p.Id).Any()
-    //                ? _unitOfWork.Review.GetReviewsByProductId(p.Id).Average(r => r.Rating)
-    //                : 0
-    //        })
-    //        .ToList();
-
-    //    return View(products);
-    //}
-
-    //public IActionResult Index()
-    //{
-    //    IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category");
-    //    return View(productList);
-    //}
     public IActionResult Details(int productId)
     {
         var product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "Category");

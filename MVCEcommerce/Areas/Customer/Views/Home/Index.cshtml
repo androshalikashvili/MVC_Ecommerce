@@ -1,107 +1,111 @@
 ﻿@model ProductListViewModel
 
-
 @{
     ViewData["Title"] = "Home Page";
 }
 
-<!-- Search form -->
-<form asp-action="Index" method="get" class="mb-4">
-    <div class="input-group">
-        <input type="text" name="Name" class="form-control" placeholder="Search Product..." value="@ViewBag.SearchTerm">
-        <button type="submit" class="btn btn-primary">Search</button>
-    </div>
-</form>
+<div class="container">
+    <div class="row">
+        <!-- Filter panel on the left -->
+        <div class="col-lg-3 col-md-4 col-sm-12">
+            <form asp-action="Index" method="get" class="filter-panel">
+                <h4>Filter</h4>
 
-<form asp-action="Index" method="get">
-    <div class="filter-panel">
-        <h4>Filter</h4>
+                <!-- Category Filter -->
+                <div class="form-group">
+                    <label>Category</label>
+                    <select asp-for="Filter.CategoryId" asp-items="Model.Filter.Categories" class="form-control">
+                        <option value="">All</option>
+                    </select>
+                </div>
 
-        <!-- Category Filter -->
-        <div class="form-group">
-            <label>Category</label>
-            <select asp-for="Filter.CategoryId" asp-items="Model.Filter.Categories" class="form-control">
-                <option value="">All</option>
-            </select>
+                <!-- Find by Name -->
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" asp-for="Filter.Name" class="form-control" placeholder="Enter Name">
+                </div>
+
+                <!-- Filter by Price -->
+                <div class="form-group">
+                    <label>Price</label>
+                    <div class="d-flex">
+                        <input type="number" asp-for="Filter.MinPrice" class="form-control" placeholder="Min" />
+                        <input type="number" asp-for="Filter.MaxPrice" class="form-control" placeholder="Max" />
+                    </div>
+                </div>
+
+                <!-- Rating Filter -->
+                <div class="form-group">
+                    <label>Rating</label>
+                    <select asp-for="Filter.Rating" class="form-control">
+                        <option value="">Any</option>
+                        <option value="1">★☆☆☆☆</option>
+                        <option value="2">★★☆☆☆</option>
+                        <option value="3">★★★☆☆</option>
+                        <option value="4">★★★★☆</option>
+                        <option value="5">★★★★★</option>
+                    </select>
+                </div>
+
+                <!-- Button -->
+                <button type="submit" class="btn btn-primary">Apply</button>
+                <a asp-action="Index" class="btn btn-secondary">Reset</a>
+            </form>
+
+            <!-- Search form -->
+            <form asp-action="Index" method="get" class="mb-4">
+                <div class="input-group">
+                    <input type="text" name="Name" class="form-control" placeholder="Search Product..." value="@ViewBag.SearchTerm">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
         </div>
 
-        <!-- Find by Name -->
-        <div class="form-group">
-            <label>Name</label>
-            <input type="text" asp-for="Filter.Name" class="form-control" placeholder="Enter Name">
-        </div>
+        <!-- Products section on the right -->
+        <div class="col-lg-9 col-md-8 col-sm-12">
+            <div class="row pb-3">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="row p-2">
+                            <div class="col-12 p-1">
+                                <a asp-action="Details" asp-route-productId="@product.Product.Id">
+                                    <div class="card border-0 p-3 shadow border-top border-5 rounded card-hover">
+                                        <!-- Image -->
+                                        <img src="@product.Product.ImageUrl" class="card-img-top rounded" alt="@product.Product.Name" />
 
-        <!-- Filter by Price -->
-        <div class="form-group">
-            <label>Price</label>
-            <div class="d-flex">
-                <input type="number" asp-for="Filter.MinPrice" class="form-control" placeholder="Min" />
-                <input type="number" asp-for="Filter.MaxPrice" class="form-control" placeholder="Max" />
-            </div>
-        </div>
+                                        <!-- Card Body -->
+                                        <div class="card-body pb-0">
+                                            <div class="pl-1">
+                                                <!-- Price -->
+                                                <p class="card-title h5 text-dark opacity-75"><b>@product.Product.Price.ToString("c")</b></p>
 
-        <!-- Rating Filter -->
-        <div class="form-group">
-            <label>Rating</label>
-            <select asp-for="Filter.Rating" class="form-control">
-                <option value="">Any</option>
-                <option value="1">★☆☆☆☆</option>
-                <option value="2">★★☆☆☆</option>
-                <option value="3">★★★☆☆</option>
-                <option value="4">★★★★☆</option>
-                <option value="5">★★★★★</option>
-            </select>
-        </div>
+                                                <!-- Product Name -->
+                                                <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.Product.Name</p>
 
-        <!-- Button -->
-        <button type="submit" class="btn btn-primary">Apply</button>
-        <a asp-action="Index" class="btn btn-secondary">Reset</a>
-    </div>
-</form>
+                                                <!-- Rating -->
+                                                <div class="d-flex justify-content-center mb-2">
+                                                    @for (int i = 1; i <= 5; i++)
+                                                    {
+                                                        <i class="bi @(i <= Math.Round(product.AverageRating) ? "bi-star-fill text-warning" : "bi-star text-secondary")"></i>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
 
-
-<div class="row pb-3">
-    @foreach (var product in Model.Products)
-    {
-        <div class="col-lg-3 col-sm-6">
-            <div class="row p-2">
-                <div class="col-12 p-1">
-                    <a asp-action="Details" asp-route-productId="@product.Product.Id">
-                        <div class="card border-0 p-3 shadow border-top border-5 rounded card-hover">
-                            <!-- Image -->
-                            <img src="@product.Product.ImageUrl" class="card-img-top rounded" alt="@product.Product.Name" />
-
-                            <!-- Card Body -->
-                            <div class="card-body pb-0">
-                                <div class="pl-1">
-                                    <!-- Price -->
-                                    <p class="card-title h5 text-dark opacity-75"><b>@product.Product.Price.ToString("c")</b></p>
-
-                                    <!-- Product Name -->
-                                    <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.Product.Name</p>
-
-                                    <!-- Rating -->
-                                    <div class="d-flex justify-content-center mb-2">
-                                        @for (int i = 1; i <= 5; i++)
-                                        {
-                                            <i class="bi @(i <= Math.Round(product.AverageRating) ? "bi-star-fill text-warning" : "bi-star text-secondary")"></i>
-                                        }
+                                        <!-- Action Button -->
+                                        <div class="card-footer bg-white border-0 d-flex justify-content-around">
+                                            <!-- Add other actions like details or add to cart if needed -->
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Action Button -->
-                            <div class="card-footer bg-white border-0 d-flex justify-content-around">
-                            
-                                @* <a asp-action="Details" asp-route-productId="@product.Id" class="btn btn-outline-primary">Details</a> *@
-                                @* <button class="btn btn-success" onclick="addToCart(@product.Id)">Add to Cart</button> *@
+                                </a>
                             </div>
                         </div>
-                    </a>
-                </div>
+                    </div>
+                }
             </div>
         </div>
-    }
+    </div>
 </div>
 
 <style>
@@ -109,8 +113,19 @@
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .card-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
+    .filter-panel {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
     }
+
+        .filter-panel h4 {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
 </style>

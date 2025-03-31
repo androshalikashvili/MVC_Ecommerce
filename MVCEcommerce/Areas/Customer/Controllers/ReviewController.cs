@@ -39,15 +39,16 @@ namespace MVCEcommerce.Areas.Customer.Controllers
             _unitOfWork.Save();
 
             TempData["success"] = "Thank you for Feedback!";
-            return RedirectToAction("Details", "Home", new { id = review.ProductId });
+            return RedirectToAction("Details", "Home", new { productId = review.ProductId });
+
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetReviews(int productId)
-        {
-            var reviews = await _unitOfWork.Review.GetReviewsByProductIdAsync(productId);
-            return PartialView("_ReviewsPartial", reviews);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetReviews(int productId)
+        //{
+        //    var reviews = await _unitOfWork.Review.GetReviewsByProductIdAsync(productId);
+        //    return PartialView("_ReviewsPartial", reviews);
+        //}
 
         public IActionResult AllReviews(int productId)
         {
