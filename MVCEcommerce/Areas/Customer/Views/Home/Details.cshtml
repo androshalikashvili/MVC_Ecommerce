@@ -41,32 +41,38 @@
                         <div class="col-md-4">
                             <div class="input-group mb-3">
                                 <span class="input-group-text bg-primary text-white border-0 fw-semibold"
-                                      id="inputGroup-sizing-default">
+                                id="inputGroup-sizing-default">
                                     Count
                                 </span>
                                 <input type="number" name="quantity" id="quantityInput" value="1" class="form-control text-end"
-                                       aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
                             </div>
                         </div>
                     </div>
                     <!-- Add Cart Button -->
+                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        <div class="row">
+                            <div class="col-12 col-md-6 pb-1">
+                                <form asp-controller="CartItem" asp-action="Add" method="post">
+                                    <input type="hidden" name="productId" value="@Model.Product.Id" />
+                                    <input type="hidden" name="quantity" id="hiddenQuantity" value="1" />
+                                    <button type="submit" class="btn btn-primary w-100 py-2 text-uppercase fw-semibold">
+                                        Add To Cart
+                                    </button>
+                                </form>
+                            </div>
+                        </div>                        
+                    }
                     <div class="row">
-                        <div class="col-12 col-md-6 pb-1">
-                            <form asp-controller="CartItem" asp-action="Add" method="post">
-                                <input type="hidden" name="productId" value="@Model.Product.Id" />
-                                <input type="hidden" name="quantity" id="hiddenQuantity" value="1" />
-                                <button type="submit" class="btn btn-primary w-100 py-2 text-uppercase fw-semibold">
-                                    Add To Cart
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-auto">
-                            <a asp-controller="Review" asp-action="AddReview" asp-route-productId="@Model.Product.Id" class="btn btn-primary btn-lg">
-                                Add Feedback
-                            </a>
-                        </div>
+                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        {                            
+                            <div class="col-auto">
+                                <a asp-controller="Review" asp-action="AddReview" asp-route-productId="@Model.Product.Id" class="btn btn-primary btn-lg">
+                                    Add Feedback
+                                </a>
+                            </div>
+                        }
                         <div class="col-auto">
                             <a href="javascript:void(0);"
                                onclick="window.open('@Url.Action("AllReviews", "Review", new { productId = Model.Product.Id })', '_blank', 'width=600,height=600');"
