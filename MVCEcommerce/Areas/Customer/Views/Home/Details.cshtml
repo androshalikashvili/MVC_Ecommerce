@@ -61,16 +61,20 @@
                             </form>
                         </div>
                     </div>
-                    <!-- Add and Show all Review Buttons -->
-                    <div class="d-flex gap-3 mb-4">
-                        <a asp-controller="Review" asp-action="AddReview" asp-route-productId="@Model.Product.Id" class="btn btn-primary">
-                            Add Review
-                        </a>
-                        <a asp-controller="Review" asp-action="GetReviews" asp-route-productId="@Model.Product.Id" class="btn btn-primary">
-                            Show Reviews
-                        </a>
+                    <div class="row">
+                        <div class="col-auto">
+                            <a asp-controller="Review" asp-action="AddReview" asp-route-productId="@Model.Product.Id" class="btn btn-primary btn-lg">
+                                Add Feedback
+                            </a>
+                        </div>
+                        <div class="col-auto">
+                            <a href="javascript:void(0);"
+                               onclick="window.open('@Url.Action("AllReviews", "Review", new { productId = Model.Product.Id })', '_blank', 'width=600,height=600');"
+                               class="btn btn-info btn-lg">
+                                Feedbacks
+                            </a>
+                        </div>
                     </div>
-
                     <script>
                         document.querySelector("input[name='quantity']").addEventListener("change", function() {
                             document.getElementById("hiddenQuantity").value = this.value;

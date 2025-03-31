@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Product>
+﻿@* @model IEnumerable<Product> *@
+@model IEnumerable<ProductViewModel>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -18,26 +19,25 @@
         <div class="col-lg-3 col-sm-6">
             <div class="row p-2">
                 <div class="col-12 p-1">
-                    <a asp-action="Details" asp-route-productId="@product.Id">
+                    <a asp-action="Details" asp-route-productId="@product.Product.Id">
                         <div class="card border-0 p-3 shadow border-top border-5 rounded card-hover">
                             <!-- Image -->
-                            <img src="@product.ImageUrl" class="card-img-top rounded" alt="@product.Name" />
+                            <img src="@product.Product.ImageUrl" class="card-img-top rounded" alt="@product.Product.Name" />
 
                             <!-- Card Body -->
                             <div class="card-body pb-0">
                                 <div class="pl-1">
                                     <!-- Price -->
-                                    <p class="card-title h5 text-dark opacity-75"><b>@product.Price.ToString("c")</b></p>
+                                    <p class="card-title h5 text-dark opacity-75"><b>@product.Product.Price.ToString("c")</b></p>
 
                                     <!-- Product Name -->
-                                    <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.Name</p>
+                                    <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.Product.Name</p>
 
                                     <!-- Rating -->
                                     <div class="d-flex justify-content-center mb-2">
                                         @for (int i = 1; i <= 5; i++)
                                         {
-                                            <i class="bi-star text-secondary"></i>
-                                            @* <i class="bi @(i <= product.Rating ? "bi-star-fill text-warning" : "bi-star text-secondary")"></i> *@
+                                            <i class="bi @(i <= Math.Round(product.AverageRating) ? "bi-star-fill text-warning" : "bi-star text-secondary")"></i>
                                         }
                                     </div>
                                 </div>

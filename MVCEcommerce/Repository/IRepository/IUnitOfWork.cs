@@ -9,6 +9,6 @@ namespace MVCEcommerce.Repository.IRepository
         ICartRepository CartItem { get; }
         IReviewRepository Review { get; }
         void Save();
-        Task SaveAsync();    
+        Task SaveAsync();
     }
 }

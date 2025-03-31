@@ -8,6 +8,11 @@
 
 @if (Model.Any())
 {
+    <div class="col-6 col-md-2 offset-lg-1 pb-1">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary bg-gradient mb-5 fw-semibold btn-sm text-uppercase">
+            <small>Back to home</small>
+        </a>
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -49,7 +54,7 @@
     </form>
 
     <!-- needs some improvement -->
-    <a asp-controller="Checkout" asp-action="Index" class="btn btn-success">Place an order</a>
+    @* <a asp-controller="Checkout" asp-action="Index" class="btn btn-success">Place an order</a> *@
 }
 else
 {
