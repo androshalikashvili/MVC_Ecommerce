@@ -42,6 +42,7 @@ public class HomeController : Controller
     public IActionResult Details(int productId)
     {
         var product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "Category");
+        var reviews = _unitOfWork.Review.GetReviewsByProductId(productId);
         if (product == null) return NotFound();
 
         var productViewModel = new ProductViewModel
@@ -51,7 +52,6 @@ public class HomeController : Controller
             CategoryList = _unitOfWork.Category
                 .GetAll()
                 .Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() }),
-            AverageRating = averageRating
         };
 
         return View(productViewModel);
