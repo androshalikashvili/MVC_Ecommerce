@@ -31,7 +31,7 @@ public class HomeController : Controller
             })
             .ToList();
 
-        return View(products); // Теперь передаём список
+        return View(products);
     }
 
     //public IActionResult Index()

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVCEcommerce.Models;
+using MVCEcommerce.Models.ViewModels;
 using MVCEcommerce.Repository.IRepository;
 
 namespace MVCEcommerce.Areas.Customer.Controllers
@@ -37,8 +38,8 @@ namespace MVCEcommerce.Areas.Customer.Controllers
             await _unitOfWork.Review.AddReviewAsync(review);
             _unitOfWork.Save();
 
-            TempData["success"] = "Отзыв добавлен!";
-            return RedirectToAction("Details", "Product", new { id = review.ProductId });
+            TempData["success"] = "Thank you for Feedback!";
+            return RedirectToAction("Details", "Home", new { id = review.ProductId });
         }
 
         [HttpGet]
@@ -47,5 +48,22 @@ namespace MVCEcommerce.Areas.Customer.Controllers
             var reviews = await _unitOfWork.Review.GetReviewsByProductIdAsync(productId);
             return PartialView("_ReviewsPartial", reviews);
         }
+
+        public IActionResult AllReviews(int productId)
+        {
+            var product = _unitOfWork.Product.Get(u => u.Id == productId);
+            if (product == null) return NotFound();
+
+            var reviews = _unitOfWork.Review.GetReviewsByProductId(productId);
+
+            var viewModel = new ProductViewModel
+            {
+                Product = product,
+                Reviews = reviews
+            };
+
+            return View(viewModel);
+        }
+
     }
 }
