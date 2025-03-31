@@ -18,21 +18,72 @@ public class HomeController : Controller
         _logger = logger;
         _unitOfWork = unitOfWork;
     }
-
-    public IActionResult Index()
+    public IActionResult Index(ProductFilterViewModel filter)
     {
         var products = _unitOfWork.Product.GetAll(includeProperties: "Category")
             .Select(p => new ProductViewModel
             {
                 Product = p,
+                Reviews = _unitOfWork.Review.GetReviewsByProductId(p.Id),
                 AverageRating = _unitOfWork.Review.GetReviewsByProductId(p.Id).Any()
                     ? _unitOfWork.Review.GetReviewsByProductId(p.Id).Average(r => r.Rating)
                     : 0
             })
             .ToList();
 
-        return View(products);
+        if (!string.IsNullOrEmpty(filter.Name))
+        {
+            products = products.Where(p => p.Product.Name.ToLower().Contains(filter.Name.ToLower())).ToList();
+        }
+
+        if (filter.CategoryId.HasValue)
+        {
+            products = products.Where(p => p.Product.CategoryId == filter.CategoryId).ToList();
+        }
+
+        if (filter.MinPrice.HasValue)
+        {
+            products = products.Where(p => p.Product.Price >= filter.MinPrice).ToList();
+        }
+
+        if (filter.MaxPrice.HasValue)
+        {
+            products = products.Where(p => p.Product.Price <= filter.MaxPrice).ToList();
+        }
+
+        if (filter.Rating.HasValue)
+        {
+            products = products.Where(p => p.AverageRating >= filter.Rating).ToList();
+        }
+
+        var model = new ProductListViewModel
+        {
+            Products = products,
+            Filter = filter
+        };
+
+        ViewBag.Categories = _unitOfWork.Category.GetAll().ToList();
+        ViewBag.SearchTerm = filter.Name;
+
+        return View(model);
     }
+
+
+
+    //public IActionResult Index()
+    //{
+    //    var products = _unitOfWork.Product.GetAll(includeProperties: "Category")
+    //        .Select(p => new ProductViewModel
+    //        {
+    //            Product = p,
+    //            AverageRating = _unitOfWork.Review.GetReviewsByProductId(p.Id).Any()
+    //                ? _unitOfWork.Review.GetReviewsByProductId(p.Id).Average(r => r.Rating)
+    //                : 0
+    //        })
+    //        .ToList();
+
+    //    return View(products);
+    //}
 
     //public IActionResult Index()
     //{

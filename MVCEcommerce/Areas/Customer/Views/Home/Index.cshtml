@@ -1,5 +1,5 @@
-﻿@* @model IEnumerable<Product> *@
-@model IEnumerable<ProductViewModel>
+﻿@model ProductListViewModel
+
 
 @{
     ViewData["Title"] = "Home Page";
@@ -8,13 +8,60 @@
 <!-- Search form -->
 <form asp-action="Index" method="get" class="mb-4">
     <div class="input-group">
-        <input type="text" name="search" class="form-control" placeholder="Search Product..." value="@ViewBag.SearchTerm">
+        <input type="text" name="Name" class="form-control" placeholder="Search Product..." value="@ViewBag.SearchTerm">
         <button type="submit" class="btn btn-primary">Search</button>
     </div>
 </form>
 
+<form asp-action="Index" method="get">
+    <div class="filter-panel">
+        <h4>Filter</h4>
+
+        <!-- Category Filter -->
+        <div class="form-group">
+            <label>Category</label>
+            <select asp-for="Filter.CategoryId" asp-items="Model.Filter.Categories" class="form-control">
+                <option value="">All</option>
+            </select>
+        </div>
+
+        <!-- Find by Name -->
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" asp-for="Filter.Name" class="form-control" placeholder="Enter Name">
+        </div>
+
+        <!-- Filter by Price -->
+        <div class="form-group">
+            <label>Price</label>
+            <div class="d-flex">
+                <input type="number" asp-for="Filter.MinPrice" class="form-control" placeholder="Min" />
+                <input type="number" asp-for="Filter.MaxPrice" class="form-control" placeholder="Max" />
+            </div>
+        </div>
+
+        <!-- Rating Filter -->
+        <div class="form-group">
+            <label>Rating</label>
+            <select asp-for="Filter.Rating" class="form-control">
+                <option value="">Any</option>
+                <option value="1">★☆☆☆☆</option>
+                <option value="2">★★☆☆☆</option>
+                <option value="3">★★★☆☆</option>
+                <option value="4">★★★★☆</option>
+                <option value="5">★★★★★</option>
+            </select>
+        </div>
+
+        <!-- Button -->
+        <button type="submit" class="btn btn-primary">Apply</button>
+        <a asp-action="Index" class="btn btn-secondary">Reset</a>
+    </div>
+</form>
+
+
 <div class="row pb-3">
-    @foreach (var product in Model)
+    @foreach (var product in Model.Products)
     {
         <div class="col-lg-3 col-sm-6">
             <div class="row p-2">
